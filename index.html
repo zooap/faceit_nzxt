@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FACEIT NZXT</title>
+</head>
+<body>
+
+<div id="image-container">
+    <p>Chargement...</p>
+</div>
+
+<script>
+    // Fonction pour récupérer un paramètre depuis l'URL
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    async function getLevelImage(nickname) {
+        const url = `https://api.satont.ru/faceit?nick=${nickname}`;
+        const imageContainer = document.getElementById("image-container");
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+
+            const data = await response.json();
+            if (data && data.lvl !== undefined) {
+                const level = data.lvl;
+
+                // A FAIRE : REMPLACER LES IMAGES
+                const levelImages = {
+                    1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7YD29YHwjygUVWsOjhfYyY72LA1DLf5oh-w&s",
+                    2: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8tdGhZxYEwi9qu6YZxlkz5bPpPhx0f_crfw&s",
+                    3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr1RSI3Z1UZlOi3lvZ75olHetftG9Tbo-a1wUBBJA0jMQ_pVChT36VXYXwd0mzWpswj0A&usqp=CAU",
+                    4: "https://digiseller.mycdn.ink/imgwebp.ashx?idp=5280842&w=712",
+                    5: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLsTjN4gFWqazvXDWkeTYsH1H8RHyvAnrMehjOxEW-XRHWizUvNiY74tZFOQ7QrvBfqIs&usqp=CAU",
+                    6: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7YD29YHwjygUVWsOjhfYyY72LA1DLf5oh-w&s",
+                    7: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7YD29YHwjygUVWsOjhfYyY72LA1DLf5oh-w&s",
+                    8: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7YD29YHwjygUVWsOjhfYyY72LA1DLf5oh-w&s",
+                    9: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7YD29YHwjygUVWsOjhfYyY72LA1DLf5oh-w&s",
+                    10: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7YD29YHwjygUVWsOjhfYyY72LA1DLf5oh-w&s"
+                };
+
+                const imageUrl = levelImages[level] || "https://assets.faceit-cdn.net/hubs/avatar/03752afd-975d-436d-835e-f8d46ec5a972_1645055081127.jpg";
+
+                // Mettre à jour l'affichage
+                imageContainer.innerHTML = `<img src="${imageUrl}" alt="Niveau ${level}">`;
+            } else {
+                imageContainer.innerHTML = "<p>Impossible de récupérer le niveau.</p>";
+            }
+        } catch (error) {
+            console.error("Erreur:", error);
+            imageContainer.innerHTML = "<p>Erreur lors de la récupération.</p>";
+        }
+    }
+
+    // Récupérer le pseudo depuis l'URL
+    const nickname = getQueryParam("nick") || "ZOAP"; // Utilise "ZOAP" si le paramètre est absent
+    getLevelImage(nickname);
+
+    // Rafraîchir la page toutes les 5 minutes (300 secondes)
+    setInterval(() => {
+        location.reload();
+    }, 300000); // 300000 millisecondes = 5 minutes
+</script>
+
+</body>
+</html>
